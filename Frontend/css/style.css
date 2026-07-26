@@ -1,0 +1,851 @@
+/* ==========================================================
+   AI Assistant
+   Part 1 - Layout & Foundation
+========================================================== */
+
+/* ---------------- Google Font ---------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;600;700&display=swap');
+
+/* ---------------- Variables ---------------- */
+
+:root{
+
+    --primary:#2563eb;
+    --primary-hover:#1d4ed8;
+
+    --background:#f8fafc;
+    --surface:#ffffff;
+
+    --border:#e5e7eb;
+
+    --text:#111827;
+    --text-light:#6b7280;
+
+    --radius:14px;
+
+    --shadow:
+        0 1px 2px rgba(0,0,0,.05),
+        0 8px 24px rgba(0,0,0,.04);
+
+}
+
+/* ---------------- Reset ---------------- */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:"Inter",sans-serif;
+
+    background:var(--background);
+
+    color:var(--text);
+
+    height:100vh;
+
+    overflow:hidden;
+
+}
+
+/* ---------------- Main App ---------------- */
+
+.app{
+
+    display:flex;
+
+    flex-direction:column;
+
+    height:100vh;
+
+    max-width:1000px;
+
+    margin:auto;
+
+    background:var(--surface);
+
+    border-left:1px solid var(--border);
+
+    border-right:1px solid var(--border);
+
+}
+
+/* ---------------- Header ---------------- */
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:22px 30px;
+
+    border-bottom:1px solid var(--border);
+
+    background:white;
+
+}
+
+.brand{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:4px;
+
+}
+
+.brand h1{
+
+    font-size:30px;
+
+    font-weight:700;
+
+}
+
+.brand span{
+
+    font-size:14px;
+
+    color:var(--text-light);
+
+}
+
+/* ---------------- Status ---------------- */
+
+.status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:14px;
+
+    color:var(--text-light);
+
+}
+
+.status-dot{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:#82b306;
+
+}
+
+/* ---------------- Chat Window ---------------- */
+
+.chat-window{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    padding:40px 28px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:22px;
+
+}
+
+/* Scrollbar */
+
+.chat-window::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+.chat-window::-webkit-scrollbar-thumb{
+
+    background:#d1d5db;
+
+    border-radius:20px;
+
+}
+
+.chat-window::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+/* ---------------- Welcome ---------------- */
+
+.welcome{
+
+    margin:auto;
+
+    text-align:center;
+
+    max-width:500px;
+
+    animation:fade .5s ease;
+
+}
+
+.welcome h2{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    margin-bottom:14px;
+
+}
+
+.welcome p{
+
+    color:var(--text-light);
+
+    font-size:17px;
+
+    line-height:1.7;
+
+}
+
+/* ---------------- Utilities ---------------- */
+
+.hidden{
+
+    display:none;
+
+}
+
+/* ---------------- Animation ---------------- */
+
+@keyframes fade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media(max-width:768px){
+
+    .app{
+
+        border:none;
+
+    }
+
+    .header{
+
+        padding:18px;
+
+    }
+
+    .chat-window{
+
+        padding:22px;
+
+    }
+
+    .brand h1{
+
+        font-size:20px;
+
+    }
+
+    .welcome h2{
+
+        font-size:28px;
+
+    }
+
+}
+
+
+/* ==========================================================
+   Part 2 - Messages & Typing Indicator
+========================================================== */
+
+/* ---------------- Message Layout ---------------- */
+
+.message{
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    width:100%;
+    animation:messageAppear .25s ease;
+}
+
+.message.ai{
+    justify-content:flex-start;
+}
+
+.message.user{
+    justify-content:flex-end;
+}
+
+/* ---------------- Avatar ---------------- */
+
+.avatar,
+.typing-avatar{
+
+    width:38px;
+    height:38px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    font-size:13px;
+    font-weight:600;
+
+    color:white;
+
+    background:#2563eb;
+
+    user-select:none;
+
+}
+
+/* ---------------- Bubble ---------------- */
+
+.bubble{
+
+    max-width:75%;
+
+    padding:14px 18px;
+
+    border-radius:16px;
+
+    line-height:1.7;
+
+    word-break:break-word;
+
+    position:relative;
+
+    transition:.2s ease;
+
+}
+
+/* AI */
+
+.message.ai .bubble{
+
+    background:white;
+
+    border:1px solid var(--border);
+
+}
+
+/* User */
+
+.message.user .bubble{
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
+/* ---------------- Bubble Hover ---------------- */
+
+.bubble:hover{
+
+    transform:translateY(-1px);
+
+}
+
+/* ---------------- Text ---------------- */
+
+.bubble p{
+
+    white-space:pre-wrap;
+
+    font-size:15px;
+
+}
+
+/* ---------------- Timestamp ---------------- */
+
+.time{
+
+    display:block;
+
+    margin-top:10px;
+
+    font-size:12px;
+
+    opacity:.7;
+
+}
+
+.message.user .time{
+
+    color:rgba(255,255,255,.8);
+
+}
+
+.message.ai .time{
+
+    color:var(--text-light);
+
+}
+
+/* ---------------- Typing ---------------- */
+
+.typing{
+
+    display:flex;
+
+    align-items:flex-end;
+
+    gap:12px;
+
+    padding:0 28px 18px;
+
+}
+
+.typing-bubble{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:14px 18px;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:16px;
+
+}
+
+/* Typing Dots */
+
+.typing-bubble span{
+
+    width:7px;
+
+    height:7px;
+
+    border-radius:50%;
+
+    background:#9ca3af;
+
+    animation:typingBounce 1.2s infinite ease-in-out;
+
+}
+
+.typing-bubble span:nth-child(2){
+
+    animation-delay:.2s;
+
+}
+
+.typing-bubble span:nth-child(3){
+
+    animation-delay:.4s;
+
+}
+
+/* ---------------- Animations ---------------- */
+
+@keyframes typingBounce{
+
+    0%{
+
+        transform:translateY(0);
+
+        opacity:.4;
+
+    }
+
+    30%{
+
+        transform:translateY(-5px);
+
+        opacity:1;
+
+    }
+
+    60%{
+
+        transform:translateY(0);
+
+        opacity:.4;
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+        opacity:.4;
+
+    }
+
+}
+
+@keyframes messageAppear{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media(max-width:768px){
+
+    .bubble{
+
+        max-width:90%;
+
+        font-size:14px;
+
+    }
+
+    .avatar,
+    .typing-avatar{
+
+        width:34px;
+        height:34px;
+
+        font-size:12px;
+
+    }
+
+}
+
+/* ==========================================================
+   Part 3 - Composer (Input Area)
+========================================================== */
+
+.composer{
+
+    padding:20px 28px;
+
+    border-top:1px solid var(--border);
+
+    background:#ffffff;
+
+}
+
+#chat-form{
+
+    display:flex;
+
+    align-items:flex-end;
+
+    gap:14px;
+
+}
+
+#message-input{
+
+    flex:1;
+
+    min-height:54px;
+
+    max-height:180px;
+
+    resize:none;
+
+    border:1px solid var(--border);
+
+    border-radius:16px;
+
+    padding:16px 18px;
+
+    font-size:15px;
+
+    font-family:inherit;
+
+    line-height:1.6;
+
+    color:var(--text);
+
+    background:#ffffff;
+
+    outline:none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+
+}
+
+#message-input::placeholder{
+
+    color:#9ca3af;
+
+}
+
+#message-input:focus{
+
+    border-color:var(--primary);
+
+    box-shadow:
+        0 0 0 4px rgba(37,99,235,.10);
+
+}
+
+/* ---------------- Send Button ---------------- */
+
+#send-btn{
+
+    width:54px;
+
+    height:54px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:var(--primary);
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+        background .2s ease,
+        transform .15s ease,
+        box-shadow .2s ease;
+
+}
+
+#send-btn:hover{
+
+    background:var(--primary-hover);
+
+    box-shadow:
+        0 8px 20px rgba(37,99,235,.20);
+
+}
+
+#send-btn:active{
+
+    transform:scale(.96);
+
+}
+
+#send-btn:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+    box-shadow:none;
+
+}
+
+/* ---------------- Code Blocks ---------------- */
+
+.bubble pre{
+
+    margin-top:14px;
+
+    padding:16px;
+
+    border-radius:12px;
+
+    overflow-x:auto;
+
+    background:#111827;
+
+    color:#f9fafb;
+
+    font-size:14px;
+
+}
+
+.bubble code{
+
+    font-family:
+        Consolas,
+        Monaco,
+        monospace;
+
+}
+
+/* Inline code */
+
+.bubble p code{
+
+    padding:2px 6px;
+
+    border-radius:6px;
+
+    background:#f3f4f6;
+
+    color:#111827;
+
+}
+
+/* ---------------- Links ---------------- */
+
+.bubble a{
+
+    color:var(--primary);
+
+    text-decoration:none;
+
+}
+
+.bubble a:hover{
+
+    text-decoration:underline;
+
+}
+
+/* ---------------- Selection ---------------- */
+
+::selection{
+
+    background:#dbeafe;
+
+}
+
+/* ---------------- Smooth Scroll ---------------- */
+
+.chat-window{
+
+    scroll-behavior:smooth;
+
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media(max-width:768px){
+
+    .composer{
+
+        padding:16px;
+
+    }
+
+    #chat-form{
+
+        gap:10px;
+
+    }
+
+    #message-input{
+
+        min-height:50px;
+
+        padding:14px 16px;
+
+        font-size:14px;
+
+    }
+
+    #send-btn{
+
+        width:50px;
+
+        height:50px;
+
+        font-size:14px;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .header{
+
+        padding:16px;
+
+    }
+
+    .brand span{
+
+        display:none;
+
+    }
+
+    .status{
+
+        font-size:13px;
+
+    }
+
+    .welcome{
+
+        padding:20px;
+
+    }
+
+    .welcome h2{
+
+        font-size:24px;
+
+    }
+
+    .welcome p{
+
+        font-size:15px;
+
+    }
+
+}
