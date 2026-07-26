@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Assistant</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- ================= Header ================= -->
+
+        <header class="header">
+
+            <div class="brand">
+
+                <h1>AI Assistant</h1>
+
+                <span>Powered by LangGraph</span>
+
+            </div>
+
+            <div class="status">
+
+                <span class="status-dot"></span>
+
+                Connected
+
+            </div>
+
+        </header>
+
+        <!-- ================= Chat ================= -->
+
+        <main id="chat-window" class="chat-window">
+
+            <div class="welcome">
+
+                <h2>
+
+                    Welcome
+
+                </h2>
+
+                <p>
+
+                    Start a conversation with your AI assistant.
+
+                </p>
+
+            </div>
+
+            <!-- Messages appear here -->
+
+        </main>
+
+        <!-- ================= Typing ================= -->
+
+        <div id="typing-indicator" class="typing hidden">
+
+            <div class="typing-avatar">
+
+                AI
+
+            </div>
+
+            <div class="typing-bubble">
+
+                <span></span>
+
+                <span></span>
+
+                <span></span>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Input ================= -->
+
+        <footer class="composer">
+
+            <form id="chat-form">
+
+                <textarea id="message-input" rows="2" placeholder="Message AI Assistant..."
+                    autocomplete="off"></textarea>
+
+                <button id="send-btn" type="submit">
+                    Send
+                </button>
+
+            </form>
+
+        </footer>
+
+    </div>
+
+    <!-- ================= Templates ================= -->
+
+    <template id="user-template">
+
+        <div class="message user">
+
+            <div class="bubble">
+
+                <p class="text"></p>
+
+                <span class="time"></span>
+
+            </div>
+
+        </div>
+
+    </template>
+
+    <template id="ai-template">
+
+        <div class="message ai">
+
+            <div class="avatar">
+
+                AI
+
+            </div>
+
+            <div class="bubble">
+
+                <p class="text"></p>
+
+                <span class="time"></span>
+
+            </div>
+
+        </div>
+
+    </template>
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
