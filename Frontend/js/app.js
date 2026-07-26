@@ -9,6 +9,7 @@
 
 const API_URL = "http://127.0.0.1:8000/chat";
 
+
 // ==========================================================
 // DOM Elements
 // ==========================================================
@@ -42,6 +43,13 @@ if (!threadId) {
 // ==========================================================
 
 window.addEventListener("load", () => {
+// window has :
+//  |
+//  ├── document
+//  ├── location
+//  ├── localStorage
+//  ├── history
+//  └── events
 
     input.focus();
 
@@ -56,6 +64,33 @@ input.addEventListener("input", () => {
     input.style.height = "auto";
 
     input.style.height = input.scrollHeight + "px";
+
+// What is scrollHeight?
+
+// It is the total height needed to show all content.
+// Example:
+
+// Textarea:
+// Visible height:
+// 40px
+
+// Content requires:
+// 120px
+
+// Then:
+
+// input.scrollHeight
+// returns:
+// 120
+// So:
+// input.scrollHeight + "px"
+// becomes:
+// "120px"
+
+// Then:
+
+// input.style.height = "120px";
+// The textarea expands.
 
 });
 

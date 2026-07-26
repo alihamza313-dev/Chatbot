@@ -1,29 +1,29 @@
-from langchain_core.messages import BaseMessage, HumanMessage
-from graph import chatbot
+from fastapi import FastAPI
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+
+from chatbot_core import get_response
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class input_msg(BaseModel):
+    message : str
+    thread_id : str
+
+@app.post("/chat")
+async def query_response(input : input_msg):
+    response =  await get_response(input.message , input.thread_id)
+    return {"response": response}
 
 
-thread_id = "chat-1"
-
-print("=" * 50)
-print("🤖 Chatbot")
-print("Type 'exit' to quit.")
-print("=" * 50)
-
-config={
-        "configurable": {
-                "thread_id": thread_id
-            }
-        }
-
-while True:
-    print("-" * 50)
-    user_input = input("\nYou: ")
-    print(f"\nYou: {user_input}")
-
-    if user_input.strip().lower() in ["exit", "quit"]:
-        print("Bot: Goodbye!")
-        break
-
-    result = chatbot.invoke({ "messages": [ HumanMessage(content=user_input)]},config=config)
-
-    print("\nBot:", result["messages"][-1].content)
