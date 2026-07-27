@@ -7,7 +7,7 @@
 // Configuration
 // ==========================================================
 
-const API_URL = "http://127.0.0.1:8000/chat";
+const API_URL = "http://127.0.0.1:8000/chat/stream";
 
 
 // ==========================================================
@@ -151,32 +151,102 @@ form.addEventListener("submit", async (event) => {
 // Send Message
 // ==========================================================
 
+
+//------------------------------------------
+
+// async function sendMessage(message) {
+
+//     disableComposer();
+
+//     showTyping();
+
+// // fetch(url, options)
+// // It accepts two arguments. The options object is optional. This controls how the request is sent.
+
+// // The second argument is simply a JavaScript object.
+// // {
+// //    method: "...",
+// //    headers: {...},
+// //    body: "...",
+// //    mode: "...",
+// //    cache: "...",
+// //    credentials: "...",
+// //    ...
+// // }
+
+// // without options JavaScript assumes
+// // {
+// //     method: "GET"
+// // }
+
+
+
+//     try {
+
+//         const response = await fetch(API_URL, {
+
+//             method: "POST",
+
+//             headers: {
+
+//                 "Content-Type": "application/json"
+
+//             },
+
+//             body: JSON.stringify({
+
+//                 message: message,
+
+//                 thread_id: threadId
+
+//             })
+
+//         });
+
+//         if (!response.ok) {
+
+//             throw new Error("Server Error");
+
+//         }
+
+//         const data = await response.json();
+
+//         hideTyping();
+
+//         appendAIMessage(data.response);
+
+//     }
+
+//     catch (error) {
+
+//         hideTyping();
+
+//         appendAIMessage(
+
+//             "Sorry, I couldn't connect to the backend."
+
+//         );
+
+//         console.error(error);
+
+//     }
+
+//     finally {
+
+//         enableComposer();
+
+//     }
+
+// }
+
+
+//-------------------------------------------
+
 async function sendMessage(message) {
 
     disableComposer();
 
     showTyping();
-
-// fetch(url, options)
-// It accepts two arguments. The options object is optional. This controls how the request is sent.
-
-// The second argument is simply a JavaScript object.
-// {
-//    method: "...",
-//    headers: {...},
-//    body: "...",
-//    mode: "...",
-//    cache: "...",
-//    credentials: "...",
-//    ...
-// }
-
-// without options JavaScript assumes
-// {
-//     method: "GET"
-// }
-
-
 
     try {
 
@@ -206,11 +276,31 @@ async function sendMessage(message) {
 
         }
 
-        const data = await response.json();
+        const reader = response.body.getReader();
 
-        hideTyping();
+        const decoder = new TextDecoder();
 
-        appendAIMessage(data.response);
+        const aiMessage = createEmptyAIMessage();
+
+        let fullText = "";
+
+        let first_chunk = true;
+        while (true) {
+
+            const { done, value } = await reader.read();
+
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+
+            fullText += chunk;
+            if(first_chunk){
+                hideTyping();
+                first_chunk = false;
+            }
+
+            aiMessage.textContent = fullText;
+        }
 
     }
 
@@ -271,6 +361,36 @@ function appendUserMessage(message) {
 // ==========================================================
 // Append AI Message
 // ==========================================================
+
+function createEmptyAIMessage() {
+
+    const container = document.createElement("div");
+
+    container.className = "message ai";
+
+    container.innerHTML = `
+        <div class="avatar">
+            AI
+        </div>
+
+        <div class="bubble">
+
+            <p class="text"></p>
+
+            <span class="time">
+                ${currentTime()}
+            </span>
+
+        </div>
+    `;
+
+    chatWindow.appendChild(container);
+
+    scrollBottom();
+
+    return container.querySelector(".text");
+
+}
 
 function appendAIMessage(message) {
 
