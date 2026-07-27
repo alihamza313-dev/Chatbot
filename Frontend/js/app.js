@@ -277,6 +277,10 @@ async function sendMessage(message) {
         }
 
         const reader = response.body.getReader();
+        // The response body is not the final text yet. It is a ReadableStream.The stream keeps delivering data until it ends.
+        // response.body.getReader() creates an object that lets you manually pull chunks from that stream.
+        // The stream doesn't send JavaScript strings. 
+        // It sends bytes. TextDecoder converts bytes into a normal string
 
         const decoder = new TextDecoder();
 
@@ -288,6 +292,13 @@ async function sendMessage(message) {
         while (true) {
 
             const { done, value } = await reader.read();
+            // Each call returns an object like
+            //     {
+            //         done: false,
+            //         value: Uint8Array(...)
+            //     }
+
+            // for last read, done will become equals to true
 
             if (done) break;
 
